@@ -89,7 +89,8 @@ from strategy.validation import (
 
 from output.report import (
     print_report,
-    print_trade_setup
+    print_trade_setup,
+    generate_report_text
 )
 
 # ==================================
@@ -120,6 +121,8 @@ from config.settings import *
 # ==================================
 
 from datetime import datetime
+
+from utils.telegram_notifier import send_telegram_message
 
 # ==================================
 # DATABASE INIT
@@ -388,6 +391,50 @@ print_report(
 
     market_score,
     final_decision
+)
+
+# ==================================
+# TELEGRAM REPORT
+# ==================================
+
+telegram_report = (
+    generate_report_text(
+
+        SYMBOL,
+        last_price,
+
+        trend_1d,
+        trend_4h,
+        trend_1h,
+        trend_15m,
+        trend_5m,
+        trend_1m,
+
+        rsi_data,
+        volume_data,
+
+        funding,
+        oi_change,
+
+        market_regime,
+
+        orderflow_bull,
+        orderflow_bear,
+
+        pattern,
+        pattern_score,
+
+        market_score,
+        final_decision
+    )
+)
+
+send_telegram_message(
+    telegram_report
+)
+
+logger.info(
+    "Telegram notification sent."
 )
 
 # ==================================
